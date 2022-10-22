@@ -1,25 +1,7 @@
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class RomanToInteger {
-
-    private Set<Character> subtractionChars  = new HashSet<>() {{
-        add('I');
-        add('X');
-        add('C');
-    }};
-
-    private Map<String, Integer> subtractionInstances  = new HashMap<>() {{
-        put("IV", 4);
-        put("IX", 9);
-        put("XL", 40);
-        put("XC", 90);
-        put("CD", 400);
-        put("CM", 900);
-    }};
-
     private Map<Character, Integer> romanNumerals  = new HashMap<>() {{
         put('I', 1);
         put('V', 5);
@@ -31,29 +13,28 @@ public class RomanToInteger {
     }};
 
     public int romanToInt(String s) {
-        Integer integer =0;
+        Character currentChar;
+        int currentCharValue;
+        Character nextChar;
+        int nextCharValue;
+        int result = 0;
+        int length = s.length();
 
-        for (int i=0; i<s.length(); i++){
-            var temp = String.valueOf(s.charAt(i));
+        for (int i=0; i<length-1; i++){
 
-            if(subtractionChars.contains(temp.charAt(0))){
-                if(i!=s.length()-1)
-                    temp+= s.charAt(i+1);
+            currentChar = s.charAt(i);
+            currentCharValue =  romanNumerals.get(currentChar);
+            nextChar = s.charAt(i+1);
+            nextCharValue = romanNumerals.get(nextChar);
 
-                if(subtractionInstances.containsKey(temp)) {
-                    integer += subtractionInstances.get(temp);
-                    i++;
-                }
+            if (currentCharValue >= nextCharValue)
+                result += currentCharValue;
 
-                else integer+=romanNumerals.get(temp.charAt(0));
-
-            } else {
-
-                integer += romanNumerals.get(temp.charAt(0));
-            }
+            else
+                result -= currentCharValue;
         }
 
-        return integer;
+        return result+=romanNumerals.get(s.charAt(length-1));
     }
 
     public static void main(String[] args){
